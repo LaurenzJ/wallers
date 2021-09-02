@@ -1,0 +1,96 @@
+{% load static %}
+
+<!-- Search Wrapper Area Start -->
+<div  class="search-wrapper section-padding-100">
+    <div class="search-close">
+        <i class="fa fa-close" aria-hidden="true"></i>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="search-content">
+                    <form action="#" method="get">
+                        <input type="search" name="search" id="search" placeholder="...">
+                        <button type="submit"><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Search Wrapper Area End -->
+
+<!-- ##### Main Content Wrapper Start ##### -->
+<div class="main-content-wrapper d-flex clearfix">
+    
+    <!-- Mobile Nav (max width 767px)-->
+    <div class="mobile-nav">
+        <!-- Navbar Brand -->
+        <div class="amado-navbar-brand">
+            <a href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}" alt=""></a>
+        </div>
+        <!-- Navbar Toggler -->
+        <div class="amado-navbar-toggler">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+
+    
+
+    <!-- Header Area Start -->
+    <header style="height:100vh; background: rgba(0,153,255,255); position: -webkit-sticky; position: fixed; box-sizing: border-box; " class="header-area clearfix">
+        <!-- Close Icon -->
+        <div class="nav-close">
+            <i class="fa fa-close" aria-hidden="true"></i>
+        </div>
+        <!-- Logo -->
+        <div class="logo">
+            <a href="/"><img src="{% static 'img/logo.png' %}" alt=""></a>
+        </div>
+
+        <div class="cart-fav-search mb-100">
+            <nobr><a href="{% url 'cart' %}" class="cart-nav"><i style="color: white;" class="fa fa-shopping-cart"></i><span style="color: white;"> Einkaufswagen ({{order.get_cart_items}})</span></a></nobr>
+
+            <nobr><a href="#" class="search-nav"><i style="color: white;" class="fa fa-search"></i><span style="color:white;"> Suche</span> </a></nobr>
+            
+            <nobr>{% if request.user.is_staff %}<a  href="{% url 'orders' %}" class="cart-nav"><i style="color: white;" class="fa fa-file"></i><span style="color: white;"> Bestellungen ({{orders|length}})</span></a>{% endif %}</nobr>
+            {% if request.user.is_staff %}<nobr><a href="/admin/store/item/" class="cart-nav"><i style="color: white;" class="fa fa-plus"></i><span style="color: white;"> Produkte </a></nobr> {% endif %}
+            <hr style="padding:0; margin: 0; width: 75%;">{% if request.path != '/cart/' and request.path != '/contact/' %} <nobr><a style="cursor: pointer;" class="cart-nav"><i style="color: white;" class="fa fa-filter"></i><span style="color: white;"> Filter</a></nobr> {% endif %}
+            
+            <div id="filter">
+                {% if request.path == '/' %}
+                    <form method="GET" action="{% url 'home' %}">
+                        <select style="background-color: rgba(0,153,255,255);" onchange="this.form.submit()" name="category" id="category">
+                            <option {% if selected == "" %} selected {% endif %} value="">Alle</option>
+                            <option {% if selected == "wein" %} selected {% endif %} value="wein">Wein</option>
+                            <option {% if selected == "bier" %} selected {% endif %} value="bier">Bier</option>
+                            <option {% if selected == "likor" %} selected {% endif %} value="likor">Likör</option>
+                            <option {% if selected == "softdrinks" %} selected {% endif %} value="softdrinks">Softdrinks</option>
+                            <option {% if selected == "energydrink" %} selected {% endif %} value="energydrink">Energydrink</option>
+                            <option {% if selected == "wasser" %} selected {% endif %} value="wasser">Wasser</option>
+                        </select>
+                    </form>
+
+                {% elif request.path == '/orders/' %}
+                    <form class="form" method="GET" action="{% url 'orders' %}">
+                        <select onchange="this.form.submit()" name="order_by" id="order_by">
+                            <option selected disabled hidden>Sortieren nach</option>
+                            <option {% if selected == "delivery_date-asc" %} selected {% endif %} value="delivery_date-asc">Lieferdatum: Frühste</option>
+                            <option {% if selected == "delivery_date-desc" %} selected {% endif %} value="delivery_date-desc">Lieferdatum: Späteste</option>
+                        </select>
+                        <nobr><input {% if is_finished == "on" %} checked {% endif %} onchange="this.form.submit()" type="checkbox" id="is_finished" name="is_finished">
+                            <label style="margin-top: 16px;" for="is_finished"><span style="color: white; ">Nur Offene Bestellungen</span></label></nobr>
+                        
+                    </form>
+                {% endif %}
+            </div>
+             <div style="position: absolute; bottom: 10vh;" > 
+                <nobr><a href="{% url 'contact' %}" class="cart-nav"><i style="color: white;" class="fa fa-phone"></i><span style="color: white;"> Kontakt</span></a></nobr>
+                  </div>
+        </div>
+        
+        
+        
+        
+    </header>
+    <!-- Header Area End -->

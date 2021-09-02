@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+    {% include 'partials/nav.html' %}
+
+        <style>
+            .products-catagories-area {
+                margin-left: 320px;
+            }
+
+            /* change for mobile */
+            @media only screen and (max-width: 768px) {
+                .products-catagories-area {
+                    margin-left: 0px;
+                }
+            }
+
+        </style>
+
+        <!-- Product Catagories Area Start -->
+        <div style="margin-top: 5%; " class="products-catagories-area clearfix">
+            <div class="amado-pro-catagory clearfix">
+                {% for item in items %}
+                <!-- Single Catagory -->
+                <br><br><br><br>
+                <div style="padding: 25px; border: 1px solid rgb(235, 232, 232);"  class="single-products-catagory clearfix">
+                    <img style="display:block; margin:auto; height: 350px;" src="{{item.image.url}}" alt="">
+                    <div style="padding: 15px 30px 0 0;">
+                        <h4>{{item.name}}</h4>
+                        <p style=" font-weight: 500;">{{item.price|floatformat:2}} € <small>inkl. MwSt.</small></p> 
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between;  padding-left: 0px; padding-right: 30px;"
+                            class="qty-btn d-flex">
+                            <div class="form-outline">
+                                <input type="number" id="{{item.id}}" class="form-control" step="1" min="1" max="300" name="quantity" value="1"/>
+                            </div>
+                            <button style="height: 35px;" onClick="update_qty('{{item.id}}')" data-product={{item.id}} data-action="add_mulitple" class="btn btn-success add-btn update-cart">Hinzufügen</button>
+                        </div>
+                    </div>
+                   
+                </div>
+                <br><br><br><br>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- Product Catagories Area End -->
+    </div>
+    <!-- ##### Main Content Wrapper End ##### -->
+
+{% endblock %}

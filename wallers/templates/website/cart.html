@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+{% include 'partials/nav.html' %}
+
+    <style>
+        .cart-table-area {
+            margin-left: 400px;
+        }
+
+        /* change for mobile */
+        @media only screen and (max-width: 768px) {
+            .cart-table-area {
+                margin-left: 0px;
+            }
+        }
+
+    </style>
+    <div class="cart-table-area section-padding-100">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <div class="cart-title mt-50">
+                        <h2>Einkaufswagen</h2>
+                    </div>
+
+                    <div class="cart-table">
+                        
+                        <table class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>Preis / Total </th>
+                                    <th>Anzahl</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for item in items %}
+
+                                <tr>
+                                    
+                                        
+                                    <td class="cart_product_img">
+                                        <a href="#"><img style="display:block; margin:auto; height: 100px;" src="{{item.product.image.url}}" alt="Product"></a>
+                                    </td>
+                                    <td class="cart_product_desc">
+                                        <h5>{{item.product.name}}</h5>
+                                    </td>
+                                    <td class="price">
+                                        <span>{{item.product.price|floatformat:2}} € / {{item.get_total}} €</span>
+                                    </td>
+                                    <td style="display: flex;" class="qty">
+                                        
+                                        <p style="margin-right: 20px;" class="quantity">{{item.quantity}}</p>
+                                        <div class="quantity" style="margin-right: 15px;">
+                                            <img data-product={{item.product.id}} data-action="add" style="width: 8px; display: block;" class="chg-quantity update-cart" src="{% static 'img/arrow-up.png' %}">
+                                            <img data-product={{item.product.id}} data-action="remove" style="width: 8px;" class="chg-quantity update-cart" src="{% static 'img/arrow-down.png' %}">
+                                        </div>
+                                        <i data-product={{item.product.id}} data-action="delete" style="width: 8px; " class="chg-quantity update-cart fa fa-times"></i>
+                                        
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="cart-summary">
+                        <h5>Total</h5>
+                        <ul class="summary-table">
+                            <li><span>Summe</span> <span>{{order.get_cart_items}} Artikel</span></li>
+                            <li><span>total:</span> <span>{{order.get_cart_total}} €</span></li>
+                            {% if order.get_cart_total < 10 %} 
+                            <li><span style="text-transform:none;"><b>Mindestbestellwert liegt bei 10 €</b></span></li>
+                            {% endif %}
+                        </ul>
+
+                        {% if order.get_cart_total >= 10 %} 
+                        <div class="cart-btn mt-100">
+                            <a href="{% url 'checkout' %}" class="btn amado-btn w-100">Zur Kasse</a>
+                        </div>                       
+                            
+                
+
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Main Content Wrapper End ##### -->
+{% endblock %}

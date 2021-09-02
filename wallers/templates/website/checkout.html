@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+    .cart-table-area {
+        margin-left: 320px;
+    }
+
+    /* change for mobile */
+    @media only screen and (max-width: 768px) {
+        .cart-table-area {
+            margin-left: 0px;
+        }
+    }
+
+</style>
+
+<body>
+    {% include 'partials/nav.html' %}
+
+        <div class="cart-table-area section-padding-100">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-lg-8">
+                        <div class="checkout_details_area mt-50 clearfix"> 
+
+                            <div class="cart-title">
+                                <h2>Adresse</h2>
+                            </div>
+
+                            <form id="form" action="#" method="post">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <input type="text" class="form-control" id="first_name" value="" name="first_name"
+                                            placeholder="Vorname" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <input type="text" class="form-control" id="last_name" value=""
+                                            placeholder="Nachname" required>
+                                    </div>
+
+                                    <div class="col-12 mb-3">
+                                        <input type="email" class="form-control" id="email" placeholder="Email" name="email"
+                                            value="">
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <input readonly type="text" class="form-control mb-3" id="country"
+                                            placeholder="Land" value="Luxemburg">
+                                        </select>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <input type="text" class="form-control mb-3" id="address" placeholder="Adresse"
+                                            value="">
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <input type="text" class="form-control" id="city" placeholder="Stadt / Dorf"
+                                            value="">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <input type="text" class="form-control" id="zipCode" placeholder="Postleitzahl"
+                                            value="">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <input type="number" class="form-control" id="phone_number" min="0"
+                                            placeholder="Telefonnummer" value="">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <input type="text" onfocus="(this.type='date')"
+                                            onblur="(this.type='text')" class="form-control" id="delivery_date" min="0"
+                                            placeholder="Lieferungs-Datum & Zeit " value="">
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <textarea name="comment" class="form-control w-100" id="comment" cols="30"
+                                            rows="10" placeholder="Kommentar über die Bestellung"></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <div class="cart-summary">
+                            <h5>Total</h5>
+                            <ul class="summary-table">
+                                <li><span>Summe</span> <span>{{order.get_cart_items}} Artikel</span></li>
+                                <li><span>total:</span> <span>{{order.get_cart_total}} €</span></li>
+                            </ul>
+
+                            <div class="payment-method">
+                                <!-- Cash on delivery -->
+                                <div class="custom-control custom-checkbox mr-sm-2">
+                                    <input type="checkbox" class="custom-control-input" id="cod" checked
+                                        onclick="return false;">
+                                    <label class="custom-control-label" for="cod">Zahlung bei der Lieferung</label>
+                                </div>
+
+                            </div>
+
+                            <div class="cart-btn mt-100">
+                                <a onclick="submitFormData()" id="buy_button" type="submit" href="#"
+                                    class="btn amado-btn w-100">Kaufen</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Main Content Wrapper End ##### -->
+
+
+</body>
+
+<script>
+    var total = "{{order.get_cart_total}}"
+
+    var form = document.getElementById('form')
+
+    form.addEventListener('submit', function (e) {
+        submitFormData()
+    })
+
+    function submitFormData() {
+        console.log("Kaufen pressed")
+
+        if (form.email.value == "" | form.first_name.value == "" | form.last_name.value == "" | form.phone_number.value == "" | form.address.value == "" | form.city.value == "" | form.zipCode.value == "" | form.delivery_date.value == "") {
+            alert("Sie müssen jede Kontaktdaten ausfüllen");
+        } else {
+            var userFormData = {
+                'first_name': form.first_name.value,
+                'last_name': form.last_name.value,
+                'email': form.email.value,
+                'phone_number': form.phone_number.value,
+                'total': total,
+            }
+
+            var shippingInfo = {
+                'address': form.address.value,
+                'city': form.city.value,
+                'zipcode': form.zipCode.value,
+                'delivery_date': form.delivery_date.value,
+                'comment': form.comment.value
+            }
+
+            console.log(userFormData)
+
+            var url = "/process_order/"
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({ 'form': userFormData, 'shipping': shippingInfo })
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('success:', data);
+                alert('Kauf abgeschlossen');
+
+            cart = {}
+            document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+
+            window.location.href = "{% url 'home' %}"
+            })
+
+        }
+    }
+
+
+</script>
+
+{% endblock %}

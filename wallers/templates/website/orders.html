@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+    .products-catagories-area {
+        margin-left: 400px;
+    }
+
+    /* change for mobile */
+    @media only screen and (max-width: 768px) {
+        .products-catagories-area {
+            margin-left: 0px;
+        }
+    }
+
+</style>
+
+{% include 'partials/nav.html' %}
+
+    <div style="margin-top: 5%;" class="container products-catagories-area">
+        <br>
+        <h1>Bestellungen</h5>
+
+            <div id="accordion">
+                {% if orders %}
+                    {% for order in orders %}
+                    <div class="card">
+                        <div class="card-header" id="heading{{order.id}}">
+                            <h5 style="display: flex;" class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{order.id}}"
+                                    aria-expanded="true" aria-controls="collapse{{order.id}}">
+                                    # {{order.customer.name}}
+                                </button> 
+                                <button id="{{order.id}}" disabled style="color: black;" class="btn btn-link">{% if order.finished %} (Abgeschlossen) {% else %} (Offen) {% endif %} </button>
+                            </h5>
+                        </div>
+                        <div id="collapse{{order.id}}"
+                            class="collapse hide aria-labelledby="
+                            heading{{order.id}}" data-parent="#accordion">
+                            <div class="card-body">
+                                <p>Kunde: {{order.customer.name}}</p>
+                                <p>Lieferdatum: {{order.delivery_date|date:"d/m/y"}}</p>
+                                <p>Rechnungsnummer: {{order.transaction_id}}</p>
+                                {% if order.comment %} <p>Nachricht zur Bestellung: {{order.comment}}</p> {% endif %}
+                                <table class=table>
+                                    <thead class=thead-dark>
+                                        <tr>
+                                            <th scope="col">Adresse</th>
+                                            <th scope="col">Ortschaft</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">{{order.get_shipping_address.address}}</th>
+                                            <th scope="row">{{order.get_shipping_address.city}} L-{{order.get_shipping_address.zipcode}}</th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Produkt</th>
+                                            <th scope="col">Preis / Stück</th>
+                                            <th scope="col">Stück</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in order.get_cart_items_list %}
+                                        <tr>
+                                            <th scope="row">{{item.product.id}}</th>
+                                            <td>{{item.product.name}}</td>
+                                            <td>{{item.product.price}} €</td>
+                                            <td>{{item.quantity}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <h5 style="text-decoration: underline;">Total: {{order.get_cart_total}} €</h2>
+                                <button onClick="location.href='{% url 'order' order.transaction_id %}'" class="btn btn-info">Drucken</button>                                
+                                {% if order.finished %}
+                                    <button id="btn-{{order.id}}" data-id="{{order.id}}" data-transaction_id="{{order.transaction_id}}" class="btn btn-success change_status">Eröffnen</button>
+                                {% else %}
+                                    <button id="btn-{{order.id}}" data-id="{{order.id}}" data-transaction_id="{{order.transaction_id}}" class="btn btn-primary change_status">Abschließen</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+        
+                    {% endfor %}
+                {% else %}
+                <h6 style="margin-top: 2%;" class="text">Keine Bestellungen mehr</h3>
+                {% endif %}
+            </div>
+    </div>
+    
+</div>
+<!-- ##### Main Content Wrapper End ##### -->
+
+<script>
+    $('.change_status').click(function(){
+        id = $(this).attr('data-id');
+        transaction_id = $(this).attr("data-transaction_id");
+
+        $.get('/orders/change_status/', {transaction_id: transaction_id}, function(data){
+            $('#'+id).html(data)
+            if(data == '(Abgeschlossen)'){
+                $('#btn-'+id).html('Eröffnen');
+                $('#btn-'+id).addClass('btn-success');
+                $('#btn-'+id).removeClass('btn-primary');
+            } else {
+                $('#btn-'+id).html('Abschließen');
+                $('#btn-'+id).addClass('btn-primary');
+                $('#btn-'+id).removeClass('btn-success');
+            }
+                
+        });
+    });
+</script>
+
+{% endblock %}

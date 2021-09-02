@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+
+    .responsive {
+        margin-top: 100px;
+        margin-left: 400px;
+    }
+
+    .responsive_iframe {
+        display: inline-block;
+        width: 1;   
+    }
+
+    @media only screen and (max-width: 767px) {
+        .responsive_iframe {
+            display: inline-block;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            position: relative;
+        }
+
+        .responsive_iframe iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .responsive {
+            margin-left: 0px;
+        }
+    }
+
+</style>
+
+{% include 'partials/nav.html' %}
+<div class="responsive" >
+    <div style="background: #003980; display:inline-block ">
+        <h1 style="background: white;">Kontakt</h5>
+            <img style="display:block; margin:auto; height: 350px;" src="{% static 'img/contact_img.jpg' %}" alt="">
+            <div style="padding: 25px; ">
+                <h5 style="color: white;">Boissons Wallers</h4>
+                    <p class="card-text"> 20 Am Clemensbongert <br>
+                        L-9158 Heiderscheid (Heischent) <br>
+                        <span><i class="fa fa-arrow-right"> </i> Telefon : +352 89 90 62</span> <br>
+                        <span><i class="fa fa-arrow-right"> </i> Fax : +352 89 94 71</span>
+                    </p>
+                    <a href="tel:+352899062" class="btn btn-primary">Anrufen</a>
+            </div>
+
+    </div>
+    <div style="display:inline-block;" class="responsive_iframe">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2570.704780321485!2d5.982675815711007!3d49.8855703794014!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c0004a850c4913%3A0xa86a4f8c28ceb784!2sBoissons%20Wallers!5e0!3m2!1sde!2slu!4v1628759702382!5m2!1sde!2slu"
+            width="600" height="450" style="border:0; " allowfullscreen="" loading="lazy">
+        </iframe>
+    </div>
+
+</div>
+
+<!-- <div>
+        <div style="display: flex; justify-content: space-between;  padding-left: 0px; padding-right: 30px;"
+            class="qty-btn d-flex">
+            <div class="form-outline">
+                <input type="number" id="{{item.id}}" class="form-control" step="1" min="1" max="300" name="quantity" value="1"/>
+            </div>
+            <button style="height: 35px;" onClick="update_qty('{{item.id}}')" data-product={{item.id}} data-action="add_mulitple" class="btn btn-success add-btn update-cart">Hinzufügen</button>
+        </div>
+    </div> -->
+
+</div>
+<!-- <div style="margin-top: 5%;" class="container">
+        <br>
+        <h1>Kontakt</h5>
+            <div class="card" style="width: 33rem; background: #003980; ">
+                <img class="card-img-top" src="{% static 'img/contact_img.jpg' %}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 style="color: white;" class="card-title">Boissons Wallers </h5>
+                    <p class="card-text">   20 Am Clemensbongert <br>
+                                            L-9158 Heiderscheid (Heischent) <br>
+                                            <span><i class="fa fa-arrow-right"> </i> Telefon : +352 89 90 62</span> <br>
+                                            <span><i class="fa fa-arrow-right"> </i> Fax : +352 89 94 71</span>
+                    </p>
+                    <a href="tel:+352899062" class="btn btn-primary">Anrufen</a></div>
+            </div>  
+    </div>
+     -->
+</div>
+<!-- ##### Main Content Wrapper End ##### -->
+
+{% endblock %}
